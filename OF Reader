@@ -1,0 +1,175 @@
+import React, { useState } from 'react';
+import { Upload, FileText, Calendar, Package, AlertTriangle, Download, Info } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+const DocumentAnalyzer = () => {
+  const [activeTab, setActiveTab] = useState('details');
+
+  const TabContent = ({ title, icon: Icon, items }) => (
+    <div className="p-4 border rounded-lg bg-white shadow">
+      <div className="flex items-center mb-4">
+        <Icon className="mr-2" />
+        <h2 className="text-lg font-semibold">{title}</h2>
+      </div>
+      <ul className="space-y-2">
+        {items.map((item, index) => (
+          <li key={index} className="flex justify-between">
+            <span className="font-medium">{item.label}:</span>
+            <span>{item.value}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
+  const handleExport = (format) => {
+    console.log(`Exporting in ${format} format`);
+  };
+
+  const products = [
+    {
+      material: "S/4HANA Cloud",
+      annualFee: "50,000",
+      startDate: "2024-01-01",
+      endDate: "2024-12-31",
+      quantity: "1",
+      totalFee: "50,000"
+    },
+    {
+      material: "SAP Analytics Cloud",
+      annualFee: "25,000",
+      startDate: "2024-01-01",
+      endDate: "2024-12-31",
+      quantity: "2",
+      totalFee: "50,000"
+    }
+  ];
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 bg-gray-100">
+      <h1 className="text-2xl font-bold mb-6">Document Analyzer Tool</h1>
+      
+      <div className="mb-6 flex justify-between">
+        <div>
+          <Button className="mr-4">
+            <Upload className="mr-2 h-4 w-4" /> Upload Contract
+          </Button>
+          <Button>
+            <Upload className="mr-2 h-4 w-4" /> Upload Purchase Order
+          </Button>
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              <Download className="mr-2 h-4 w-4" /> Export
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => handleExport('excel')}>
+              Export as Excel
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleExport('pdf')}>
+              Export as PDF
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <Alert>
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Analysis Complete</AlertTitle>
+        <AlertDescription>
+          The documents have been successfully analyzed. Review the extracted information below.
+        </AlertDescription>
+      </Alert>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
+        <TabsList>
+          <TabsTrigger value="details">Details</TabsTrigger>
+          <TabsTrigger value="dates">Dates</TabsTrigger>
+          <TabsTrigger value="products">Products</TabsTrigger>
+          <TabsTrigger value="clauses">Special Clauses</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="details">
+          <TabContent
+            title="Contract Details"
+            icon={Info}
+            items={[
+              { label: "Vendor", value: "TechSupply Inc." },
+              { label: "Country", value: "United States" },
+              { label: "Contract Type", value: "Supply Agreement" },
+              { label: "End Customer", value: "Global Tech Solutions" },
+              { label: "Partner/Reseller", value: "IT Distributors Ltd." },
+              { label: "Business Model", value: "B2B" },
+              { label: "Language", value: "English" },
+              { label: "Currency", value: "USD" },
+            ]}
+          />
+        </TabsContent>
+
+        <TabsContent value="dates">
+          <TabContent
+            title="Important Dates"
+            icon={Calendar}
+            items={[
+              { label: "Contract Start", value: "2024-01-01" },
+              { label: "Contract End", value: "2024-12-31" },
+              { label: "Offer Validity", value: "2023-12-31" },
+              { label: "Signature Date", value: "2023-11-15" },
+            ]}
+          />
+        </TabsContent>
+        
+        <TabsContent value="products">
+          <div className="p-4 border rounded-lg bg-white shadow">
+            <div className="flex items-center mb-4">
+              <Package className="mr-2" />
+              <h2 className="text-lg font-semibold">Products</h2>
+            </div>
+            <div className="grid grid-cols-6 gap-2 font-bold mb-2 text-sm">
+              <div>Material</div>
+              <div>Annual Fee</div>
+              <div>Start Date</div>
+              <div>End Date</div>
+              <div>Quantity</div>
+              <div>Total Fee</div>
+            </div>
+            {products.map((product, index) => (
+              <div key={index} className="grid grid-cols-6 gap-2 text-sm mb-2 pb-2 border-b last:border-b-0">
+                <div>{product.material}</div>
+                <div>{product.annualFee}</div>
+                <div>{product.startDate}</div>
+                <div>{product.endDate}</div>
+                <div>{product.quantity}</div>
+                <div>{product.totalFee}</div>
+              </div>
+            ))}
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="clauses">
+          <TabContent
+            title="Special Clauses"
+            icon={FileText}
+            items={[
+              { label: "Price Increase", value: "3% annually" },
+              { label: "Payment Terms", value: "Net 60" },
+              { label: "Exclusivity", value: "3 years" },
+            ]}
+          />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default DocumentAnalyzer;
